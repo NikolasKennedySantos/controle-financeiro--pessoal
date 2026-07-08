@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Financer — Controle Financeiro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="logo">
+      <span class="logo-icon">₿</span>
+      <span class="logo-text">Financer</span>
+    </div>
+    <nav class="nav">
+      <a href="#" class="nav-item active" data-section="dashboard">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Visão Geral
+      </a>
+      <a href="#" class="nav-item" data-section="transacoes">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Transações
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar">N</div>
+        <div>
+          <div class="user-name">Nikolas</div>
+          <div class="user-role">Administrador</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div>
+        <h1 class="page-title">Visão Geral</h1>
+        <p class="page-subtitle">Acompanhe suas finanças em tempo real</p>
+      </div>
+      <button class="btn-primary" id="btnNovaTransacao">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nova Transação
+      </button>
+    </header>
+
+    <!-- CARDS RESUMO -->
+    <section class="cards-grid">
+      <div class="card card--balance">
+        <div class="card-label">Saldo Total</div>
+        <div class="card-value" id="saldoTotal">R$ 0,00</div>
+        <div class="card-bar">
+          <div class="card-bar-fill" id="saldoBar"></div>
+        </div>
+      </div>
+      <div class="card card--income">
+        <div class="card-label">Total Receitas</div>
+        <div class="card-value" id="totalReceitas">R$ 0,00</div>
+        <div class="card-tag">↑ Entradas</div>
+      </div>
+      <div class="card card--expense">
+        <div class="card-label">Total Despesas</div>
+        <div class="card-value" id="totalDespesas">R$ 0,00</div>
+        <div class="card-tag">↓ Saídas</div>
+      </div>
+    </section>
+
+    <!-- LISTA DE TRANSAÇÕES -->
+    <section class="transacoes-section">
+      <div class="section-header">
+        <h2 class="section-title">Transações</h2>
+        <div class="filters">
+          <button class="filter-btn active" data-filter="todas">Todas</button>
+          <button class="filter-btn" data-filter="RECEITA">Receitas</button>
+          <button class="filter-btn" data-filter="DESPESA">Despesas</button>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Descrição</th>
+              <th>Tipo</th>
+              <th>Data</th>
+              <th>Valor</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaTransacoes">
+            <tr class="empty-row" id="emptyState">
+              <td colspan="5">
+                <div class="empty-state">
+                  <svg viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                  <p>Nenhuma transação encontrada</p>
+                  <span>Clique em "Nova Transação" para começar</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Nova Transação</h3>
+        <button class="modal-close" id="btnFecharModal">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <form class="modal-form" id="formTransacao">
+        <input type="hidden" id="transacaoId"/>
+
+        <div class="form-group">
+          <label class="form-label">Descrição</label>
+          <input type="text" class="form-input" id="descricao" placeholder="Ex: Salário, Conta de luz..." required/>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Valor (R$)</label>
+            <input type="number" class="form-input" id="valor" placeholder="0,00" step="0.01" min="0" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Data</label>
+            <input type="date" class="form-input" id="data" required/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Tipo</label>
+          <div class="tipo-selector">
+            <input type="radio" name="tipo" id="tipoReceita" value="RECEITA"/>
+            <label for="tipoReceita" class="tipo-btn tipo-btn--receita">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+              Receita
+            </label>
+            <input type="radio" name="tipo" id="tipoDespesa" value="DESPESA"/>
+            <label for="tipoDespesa" class="tipo-btn tipo-btn--despesa">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+              Despesa
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="btnCancelar">Cancelar</button>
+          <button type="submit" class="btn-primary" id="btnSalvar">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="main.js"></script>
+</body>
+</html>
